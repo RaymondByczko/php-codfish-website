@@ -1,0 +1,16 @@
+{
+	"name": "raymond-byczko/php-codfish-website",
+	"repositories": [
+		{
+			"type": "vcs",
+			"url": "https://github.com/RaymondByczko/php-codfish"
+		}
+	],
+	"require": {
+		"raymond-byczko/php-codfish":"dev-master"
+	},
+	"require-dev": {
+		"raymond-byczko/php-codfish":"dev-master",
+		"phpunit/phpunit": "^8.2"
+	}
+}
