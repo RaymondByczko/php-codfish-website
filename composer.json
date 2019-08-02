@@ -7,10 +7,10 @@
 		}
 	],
 	"require": {
-		"raymond-byczko/php-codfish":"dev-master"
+		"raymond-byczko/php-codfish":"master"
 	},
 	"require-dev": {
-		"raymond-byczko/php-codfish":"dev-master",
+		"raymond-byczko/php-codfish":"master",
 		"phpunit/phpunit": "^8.2"
 	}
 }
