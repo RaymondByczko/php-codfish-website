@@ -12,5 +12,6 @@
 	"require-dev": {
 		"raymond-byczko/php-codfish":"dev-master",
 		"phpunit/phpunit": "^8.2"
-	}
+	},
+	"bin": ["bin/codfish-website-install.php"]
 }

@@ -1,0 +1,48 @@
+<?php
+// #!/usr/bin/env php
+?>
+<?php
+	echo '<pre>';
+	echo 'codfish-website-install:start'."\n";
+	echo '__FILE__='.__FILE__."\n";
+	$currentDir = getcwd();
+	echo 'currentDir='.$currentDir."\n";
+
+	if ($handle = opendir($currentDir)) {
+		echo "Directory handle: $handle\n";
+		echo "Entries:\n";
+
+		while (false !== ($entry = readdir($handle))) {
+			echo "$entry\n";
+			if ($entry == basename(__FILE__))
+			{
+				echo '...'.basename(__FILE__).' is at current directory'."\n";
+			}
+		}
+
+		closedir($handle);
+	}
+	else
+	{
+		exit();
+	}
+
+	// Assume we are in vendor/bin
+	require '../../vendor/autoload.php';
+	// require 'vendor/raymond-byczko/php-codfish/LongestTitle.php';
+	if (!is_dir($currentDir.'/../../TitleUtilities'))
+	{
+		mkdir($currentDir.'/../../TitleUtilities');
+	}
+	if (!file_exists($currentDir.'/../../TitleUtilities/CreateTitleDataFile.php'))
+	{
+		copy($currentDir.'/../../vendor/raymond-byczko/php-codfish-website/TitleUtilities/createTitleDataFile.php', $currentDir.'/../../TitleUtilities/CreateTitleDataFile.php');
+	}
+
+	if (!file_exists($currentDir.'/../../index.php'))
+	{
+		copy($currentDir.'/../../vendor/raymond-byczko/php-codfish-website/index.php', $currentDir.'/../../index.php');
+	}
+	echo 'codfish-website-install:end'."\n";
+	echo '</pre>';
+?>
