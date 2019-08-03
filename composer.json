@@ -7,7 +7,7 @@
 		}
 	],
 	"require": {
-		"raymond-byczko/php-codfish":"dev-master"
+		"raymond-byczko/php-codfish":"*"
 	},
 	"require-dev": {
 		"raymond-byczko/php-codfish":"dev-master",
