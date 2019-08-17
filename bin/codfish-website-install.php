@@ -2,6 +2,11 @@
 // #!/usr/bin/env php
 ?>
 <?php
+/**
+  * @change_history 2019-08-17; RByczko; Added css/styles.css .
+  */
+?>
+<?php
 	echo '<pre>';
 	echo 'codfish-website-install:start'."\n";
 	echo '__FILE__='.__FILE__."\n";
@@ -34,9 +39,20 @@
 	{
 		mkdir($currentDir.'/../../TitleUtilities');
 	}
+	if (!is_dir($currentDir.'/../../css'))
+	{
+
+		mkdir($currentDir.'/../../css');
+
+	}
+
 	if (!file_exists($currentDir.'/../../TitleUtilities/CreateTitleDataFile.php'))
 	{
 		copy($currentDir.'/../../vendor/raymond-byczko/php-codfish-website/TitleUtilities/createTitleDataFile.php', $currentDir.'/../../TitleUtilities/CreateTitleDataFile.php');
+	}
+	if (!file_exists($currentDir.'/../../css/styles.css'))
+	{
+		copy($currentDir.'/../../vendor/raymond-byczko/php-codfish-website/css/styles.css', $currentDir.'/../../css/styles.css');
 	}
 
 	if (!file_exists($currentDir.'/../../index.php'))
