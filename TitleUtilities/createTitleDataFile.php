@@ -4,6 +4,7 @@
 
 	use RaymondByczko\PhpCodfish\TitleDataFileCreateAttributes;
 	use RaymondByczko\PhpCodfish\TitleUtilities;
+	use RaymondByczko\PhpCodfishWebsite\DirUtilities;
 
 	session_start();
 
@@ -22,7 +23,8 @@
 	echo 'numberLines is:'.$numberLines."\n";
 	echo 'fileName is:'.$fileName."\n";
 	$originalExceptions = array();
-	$createAttributes = TitleDataFileCreateAttributes::makeN($numberLines, $fileName, $originalExceptions);
+	$relDir = DirUtilities::getRelative();
+	$createAttributes = TitleDataFileCreateAttributes::makeN($numberLines, $relDir.$fileName, $originalExceptions);
 	$retCreate = TitleUtilities::createTitleDataFile($createAttributes);
 	$_SESSION['makeN.index'] = 'Created file';
 	echo 'makeN.php end'."\n";

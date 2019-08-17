@@ -6,6 +6,12 @@
 			"url": "https://github.com/RaymondByczko/php-codfish"
 		}
 	],
+	"autoload": {
+        "psr-4": {
+            "RaymondByczko\\PhpCodfishWebsite\\":"src/"
+        }
+    },
+
 	"require": {
 		"raymond-byczko/php-codfish":"dev-master"
 	},
