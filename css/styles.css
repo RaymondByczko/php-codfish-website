@@ -1,0 +1,64 @@
+body {
+	font: 15px/1.5 Arial, Helvetica,sans-serif;
+	background-color: gray;
+	padding:0;
+	margin:0;
+}
+
+header {
+	background-color: red;
+	min-height:60px;
+	border-bottom: blue 4px solid;
+	padding-top: 20px;
+	color: white;
+}
+
+.highlight {
+	color: blue;
+
+}
+
+header #branding {
+	float: left;
+	padding-left: 50px;
+	text-align: center;
+	margin:auto;
+	/* color: white;*/
+}
+
+.container{
+	width: 80%;
+	margin: auto;
+	/* display: -webkit-flex;
+	display: flex;
+	flex-direction: row;*/
+	display: inline-block;
+}
+
+.container2{
+	width: 50%;
+	margin: auto;
+}
+
+header nav {
+	float: right;
+	margin-top:30px;
+}
+
+header a {
+	text-decoration: none;
+	color: white;
+}
+nav li {
+	display: inline;
+	padding: 0 20px 0 20px;
+}
+
+ul {
+	padding: 0;
+	margin: 0;
+}
+
+li.current>a {
+	color: blue;
+}
