@@ -23,7 +23,7 @@
 	echo 'numberLines is:'.$numberLines."\n";
 	echo 'fileName is:'.$fileName."\n";
 	$originalExceptions = array();
-	$relDir = DirUtilities::getRelative();
+	$relDir = DirUtilities::getRelative($_SERVER['PHP_SELF']);
 	$createAttributes = TitleDataFileCreateAttributes::makeN($numberLines, $relDir.$fileName, $originalExceptions);
 	$retCreate = TitleUtilities::createTitleDataFile($createAttributes);
 	$_SESSION['makeN.index'] = 'Created file';
