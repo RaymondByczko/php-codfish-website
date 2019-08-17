@@ -48,7 +48,7 @@
 
 	if (!file_exists($currentDir.'/../../TitleUtilities/CreateTitleDataFile.php'))
 	{
-		copy($currentDir.'/../../vendor/raymond-byczko/php-codfish-website/TitleUtilities/createTitleDataFile.php', $currentDir.'/../../TitleUtilities/CreateTitleDataFile.php');
+		copy($currentDir.'/../../vendor/raymond-byczko/php-codfish-website/TitleUtilities/createTitleDataFile.php', $currentDir.'/../../TitleUtilities/createTitleDataFile.php');
 	}
 	if (!file_exists($currentDir.'/../../css/styles.css'))
 	{
