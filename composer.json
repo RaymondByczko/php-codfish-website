@@ -13,5 +13,7 @@
 		"raymond-byczko/php-codfish":"dev-master",
 		"phpunit/phpunit": "^8.2"
 	},
-	"bin": ["bin/codfish-website-install.php"]
+	"bin": ["bin/codfish-website-install.php"],
+	"minimum-stability": "dev",
+	"prefer-stable": true
 }
