@@ -1,12 +1,24 @@
 <configuration xmlns="http://logging.apache.org/log4php/">
-    <appender name="websiteAppender" class="LoggerAppenderFile">
+    <appender name="indexAppender" class="LoggerAppenderFile">
 		<layout class="LoggerLayoutPattern">
             <param name="conversionPattern" value="%date [%logger] %message%newline" />
         </layout>
         <param name="file" value="./log/website.log" />
     </appender>
+        <appender name="otherAppender" class="LoggerAppenderFile">
+        <layout class="LoggerLayoutPattern">
+            <param name="conversionPattern" value="%date [%logger] %message%newline" />
+        </layout>
+        <param name="file" value="../log/website.log" />
+    </appender>
+    <logger name="index">
+        <appender_ref ref="indexAppender" />
+    </logger>
+    <logger name="other">
+        <appender_ref ref="otherAppender" />
+    </logger>
     <root>
         <level value="TRACE" />
-        <appender_ref ref="websiteAppender" />
+        <appender_ref ref="indexAppender" />
     </root>
 </configuration>

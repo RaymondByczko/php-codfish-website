@@ -13,7 +13,8 @@
     },
 
 	"require": {
-		"raymond-byczko/php-codfish":"dev-master"
+		"raymond-byczko/php-codfish":"dev-master",
+		"apache/log4php": "^2.3"
 	},
 	"require-dev": {
 		"raymond-byczko/php-codfish":"dev-master",

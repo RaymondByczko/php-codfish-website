@@ -1,6 +1,21 @@
 <?php
 require 'vendor/autoload.php';
+session_name('sn-php-codfish-website');
 session_start();
+
+ 
+// Tell log4php to use our configuration file.
+Logger::configure('config/config.xml');
+ 
+// Fetch a logger, it will inherit settings from the root logger
+$log = Logger::getLogger('index');
+ 
+// Start logging
+// $log->trace("trace message.");
+$log->debug("index: start");
+$sid = session_id();
+$log->debug("session id=".$sid);
+
 ?>
 <!DOCTYPE html>
 <html>
