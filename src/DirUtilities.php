@@ -222,7 +222,7 @@ static public function isLocationGeneratedFull()
 	}
 	while (($file = readdir($hd)) !== false)
 	{
-    	$ft = filetype($lg.$file);
+    	$ft = filetype($lg.'/'.$file);
     	if ($ft == 'dir')
     	{
     		$numDirs++;
@@ -237,8 +237,12 @@ static public function isLocationGeneratedFull()
 /**
   * Removed the older files in the base location of generated files.
   *
+  * The relative directory, as it is called, is an optional parameter.
+  * If set to null, then $_SERVER['PHP_SELF'] of this file itself
+  * will be used.  If not null, that value will be used.
+  *
   */
-static public function removeOlderFiles()
+static public function removeOlderFiles($relDir = NULL)
 {
 	// Get the current time.
 	// Get contents of base location of generated file.
@@ -246,7 +250,7 @@ static public function removeOlderFiles()
 	// Delete those entries.
 
 	$currentTime = time();
-	$relDir = self::getRelative($_SERVER['PHP_SELF']);
+	$relDir = is_null($relDir)?self::getRelative($_SERVER['PHP_SELF']):$relDir;
 	$lg = self::baseLocationGenerated();
 	if (!is_dir($relDir.$lg))
 	{

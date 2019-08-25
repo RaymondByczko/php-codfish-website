@@ -63,7 +63,7 @@ class DirUtilitiesBTest extends TestCase
     {
     	echo "\n".'... testEndsWith'."\n";
         $wd = getcwd();
-        throw new Exception('testEndsWith: does tearDown occur after');
+        // throw new Exception('testEndsWith: does tearDown occur after?');
         $retEndsWith = DirUtilities::currentDirEndsWith();
         $this->assertEquals(TRUE, $retEndsWith);
     }
