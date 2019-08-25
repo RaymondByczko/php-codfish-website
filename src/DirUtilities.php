@@ -12,11 +12,32 @@ public static $max_age = 15*60*60; // in secs, corresponding to 15 minutes
 
 public static $relativeDirectory;
 
-static public function getRelative($ps)
+/**
+  * Given a pathname given by $ps, this method gets
+  * the relative directory back to the root, or beginning,
+  * of the path given by $ps.
+  *
+  * $ps should begin with '/', otherwise an Exception is thrown.
+  * To allow $ps not not start with a '/', set $startWithFS to
+  * FALSE.
+  *
+  * Generally, this method is given $_SERVER['PHP_SELF'].
+  * So the call if it looks like:
+  *
+  * DirUtilities::getRelative($_SERVER['PHP_SELF']
+  *
+  * Beginning with forward slash can be confusing.  PHP_SELF
+  * begins with a '/', so it looks like the beginning of the
+  * file system.  Its actually from the document root.
+  */
+static public function getRelative($ps, $startWithFS=TRUE)
 {
 	// $ps = $_SERVER['PHP_SELF'];
 	$chunksPs = explode('/', $ps);
 	$ctChunksPs = count($chunksPs);
+	echo "\n".'... ps='.$ps."; startWithFS==".var_export($startWithFS, TRUE)."\n";
+	echo "\n".'... ctChunksPs='.$ctChunksPs."\n";
+
 
 	if ($ctChunksPs > 0)
 	{
@@ -26,12 +47,20 @@ static public function getRelative($ps)
 		}
 		else
 		{
-			// not ok - something unexpected.
-			throw new Exception('expected empty string for first element');
+			if ($startWithFS == TRUE)
+			{
+				// not ok - something unexpected.
+				throw new \Exception('expected empty string for first element');
+			}
 		}
 	}
 
-	for ($i=1; $i<$ctChunksPs; $i++)
+	if ($startWithFS)
+		$iStart = 1;
+	else
+		$iStart = 0;
+
+	for ($i=$iStart; $i<$ctChunksPs; $i++)
 	{
 		if ($chunksPs[$i] != '')
 		{
@@ -46,15 +75,85 @@ static public function getRelative($ps)
 	}
 
 	$relPath = '';
-	$numEmptyComponent = 1;
+	$numEmptyComponent = NULL;
+	$jStart = NULL;
+	if ($startWithFS)
+	{
+		$numEmptyComponent = 1;
+		$jStart = 1;
+	}
+	else
+	{
+		$numEmptyComponent = 0;
+		$jStart = 1;
+	}
+
 	$numFileNameComponent = 1;
 
 	$numIgnoredComponent = $numEmptyComponent + $numFileNameComponent;
-	for ($j=1; $j <= ($ctChunksPs - $numIgnoredComponent); $j++)
+	for ($j=$jStart; $j <= ($ctChunksPs - $numIgnoredComponent); $j++)
 	{
 		$relPath .= '../';
 	}
 	return $relPath;
+}
+
+
+/**
+  * This function determines if the current directory ends in the
+  * path piece given by $dir.
+  *
+  * True would be returned for the following.
+  *		~/vendor/bin
+  *		~/websites/goodsite_install/vendor/bin
+  *		/vendor/bin
+  */
+static public function currentDirEndsWith($dir = 'vendor/bin')
+{
+	$retEndsWith = FALSE;
+	// For each piece in $dir, make sure there
+	// is that entry as we explore back.
+	$chunksDir = explode('/', $dir);
+	echo '...chunksDir='.var_export($chunksDir, TRUE)."\n";
+	$ctChunksDir = count($chunksDir);
+	echo '...ctChunksDir='.$ctChunksDir."\n";
+	if ($ctChunksDir < 1)
+	{
+		// dir is specified as empty
+		echo '...ctChunksDir<1'."\n";
+		return FALSE; // @todo check this
+	}
+	$inspectPath = '../';
+	$currentChunkFound = FALSE;
+	for ($i = ($ctChunksDir-1); $i >= 0; $i--)
+	{
+		echo '...i='.$i."\n";
+		$currentChunk = $chunksDir[$i];
+		echo '...currentChunk='.$currentChunk."\n";
+		$currentChunkFound = FALSE;
+		if ($handle = opendir($inspectPath))
+		{
+			while (false !== ($entry = readdir($handle)))
+			{
+				if ($entry == $currentChunk)
+				{
+					$currentChunkFound = TRUE;
+					echo '...currentChunkFound...'.$entry."\n";
+				}
+			}
+		}
+		if (!$currentChunkFound)
+		{
+			echo '...NOT currentChunkFound'."\n";
+			break;
+		}
+		$inspectPath .= $inspectPath;
+	}
+	if ($currentChunkFound)
+	{
+		$retEndsWith = TRUE;	
+	}
+	return $retEndsWith;
 }
 
 /**
