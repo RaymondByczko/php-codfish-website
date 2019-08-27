@@ -33,7 +33,24 @@
 	}
 
 	// Assume we are in vendor/bin
+	// @todo call code to insure that.
 	require '../../vendor/autoload.php';
+	use RaymondByczko\PhpCodfishWebsite\DirUtilities;
+	
+	$genDir = DirUtilities::baseLocationGenerated();
+
+	is (!is_dir($currentDir.'/../../'.$genDir))
+	{
+		mkdir($currentDir.'/../../'.$genDir);
+	}
+
+	$logDir = DirUtilities::logLocation();
+
+	is (!is_dir($currentDir.'/../../'.$logDir))
+	{
+		mkdir($currentDir.'/../../'.$logDir);
+	}
+
 	// require 'vendor/raymond-byczko/php-codfish/LongestTitle.php';
 	if (!is_dir($currentDir.'/../../TitleUtilities'))
 	{

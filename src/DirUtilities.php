@@ -13,6 +13,15 @@ public static $max_age = 15*60*60; // in secs, corresponding to 15 minutes
 public static $relativeDirectory;
 
 /**
+  * Returns the location where logs are stored for this application.
+  * @todo This may be refactored into another class.
+  */
+static public function logLocation()
+{
+	return 'log';
+}
+
+/**
   * Given a pathname given by $ps, this method gets
   * the relative directory back to the root, or beginning,
   * of the path given by $ps.
@@ -235,6 +244,45 @@ static public function isLocationGeneratedFull()
 }
 
 /**
+  * Returns, to some extent, the contents of the located used for
+  * generated files.  That location has subdirectories, and each
+  * subdirectory reflects a session, and it contains a single
+  * resource created (and to be downloaded) by the user
+  * associated with that session.
+  *
+  * Basically the names of the directories in the generated
+  * directory are returned via an array.
+  */
+static public function contentsGenerated()
+{
+	$sessionDirs = array();
+	$lg = self::baseLocationGenerated();
+	if (!is_dir($lg))
+	{
+		return -1; 	// Location is not a directory.  It may
+					// not have been created.
+	}
+	$hd = opendir($lg);
+	if (!$hd)
+	{
+		return -2;	// Unable to opendir.  Maybe permissions?
+	}
+	while (($file = readdir($hd)) !== false)
+	{
+		echo "\n".'... file='.$file."\n";
+    	$ft = filetype($lg.'/'.$file);
+    	if (  ($ft == 'dir') && (($file != '..')&&($file != '.'))  )
+    	{
+    		echo "\n... adding file=".$file."\n";
+    		$sessionDirs[] = $file;
+    	}
+	}
+	closedir($hd);
+	return $sessionDirs;
+}
+//ENZ
+
+/**
   * Removed the older files in the base location of generated files.
   *
   * The relative directory, as it is called, is an optional parameter.
@@ -279,6 +327,95 @@ static public function removeOlderFiles($relDir = NULL)
 	}
 	closedir($hd);
 	return 1; // Success
+}
+
+/**
+  * Prunes the generation area of files, first based on exceeding
+  * a certain max age that is allowed, and then based on the max
+  * capacity of that generation area.
+  *
+  * Here is how its done.
+  *
+  * This method first identifies those files in the generated area
+  * that are older than $max_age, and removes them.  Files should
+  * only exist in that generation area for so long, and then they should
+  * be removed.  This will help keep the generation area under a certain
+  * size.
+  *
+  * Then, remaining files will be ordered by their age.  If that set
+  * exceeds max_capacity, it will have to be reduced in size to max_capacity.
+  * The files that are deleted will be the oldest.
+  */
+static public function pruneFiles($relDirPrune = NULL)
+{
+	$thoseNotOutOfDate = array();
+	$currentTime = time();
+
+	$relDir = '';
+	$sapiType = php_sapi_name();
+	if (substr($sapiType, 0,3) == 'cli')
+	{
+		if (is_null($relDirPrune))
+		{
+			$relDir = '';// @todo
+		}
+	}
+	else
+	{
+		$relDir = is_null($relDirPrune)?self::getRelative($_SERVER['PHP_SELF']):$relDirPrune;
+	}
+	$lg = self::baseLocationGenerated();
+	if (!is_dir($relDir.$lg))
+	{
+		return -1; 	// Location is not a directory.  It may
+					// not have been created.
+	}
+	$hd = opendir($relDir.$lg);
+	if (!$hd)
+	{
+		return -2;	// Unable to opendir.  Maybe permissions?
+	}
+	while (($entry = readdir($hd)) !== false)
+	{
+
+		$ft = filetype($relDir.$lg.'/'.$entry);
+    	if ($ft == 'dir')
+    	{
+    	    $statDetails = stat($relDir.$lg.'/'.$entry);	
+    	    $lastModifyTime = $statDetails['mtime'];
+    	    $age = $lastModifyTime - $currentTime;
+    	    if ($age > self::$max_age)
+	    	{
+	    		unlink($relDir.$lg.'/'.$entry);
+	    	}
+	    	else
+	    	{
+	    		$thoseNotOutOfDate[$relDir.$lg.'/'.$entry] = $age;
+	    	}
+    	}
+	}
+	closedir($hd);
+
+	asort($thoseNotOutOfDate);
+	$ct = 0;
+	foreach ($thoseNotOutOfDate as $keyEntry=>$valueAge)
+	{
+		$ct++;
+		if ($ct > DirUtilities::$max_capacity)
+		{
+			unlink($keyEntry);
+		}
+	}
+/**
+	usort($thoseNotOutOfDate, function($a, $b)
+		{
+			if ($a == $b) {
+        		return 0;
+    		}
+    		return ($a < $b) ? -1 : 1;
+		});
+**/
+	return 1; // Success	
 }
 
 /**
