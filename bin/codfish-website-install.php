@@ -39,14 +39,14 @@
 	
 	$genDir = DirUtilities::baseLocationGenerated();
 
-	is (!is_dir($currentDir.'/../../'.$genDir))
+	if (!is_dir($currentDir.'/../../'.$genDir))
 	{
 		mkdir($currentDir.'/../../'.$genDir);
 	}
 
 	$logDir = DirUtilities::logLocation();
 
-	is (!is_dir($currentDir.'/../../'.$logDir))
+	if (!is_dir($currentDir.'/../../'.$logDir))
 	{
 		mkdir($currentDir.'/../../'.$logDir);
 	}
