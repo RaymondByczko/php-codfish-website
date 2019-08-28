@@ -59,10 +59,15 @@ class DirUtilitiesDTest extends TestCase
 		
 		for ($i = 0; $i < DirUtilities::$max_capacity + $this->extraFiles; $i++)
 		{
-			chdir('Session'.$i);
-			unlink('shortlivedresource.txt');
-			chdir('..');
-			rmdir('Session'.$i);
+			// Some directories and files may have been removed by
+			// DirUtilities::pruneFiles.
+			if (is_dir('Session'.$i))
+			{
+				chdir('Session'.$i);
+				unlink('shortlivedresource.txt');
+				chdir('..');
+				rmdir('Session'.$i);
+			}
 		}
 		chdir('..');
 		if ($this->createdGenDir)
@@ -77,11 +82,11 @@ class DirUtilitiesDTest extends TestCase
     	$contentsBefore = DirUtilities::contentsGenerated();
     	$sizeContentsBefore = count($contentsBefore);
     	$this->assertEquals(12, $sizeContentsBefore);
-    	$retPrune = DirUtilities::pruneFiles();
-    	// $this->assertEquals(1, $remOlder);
+    	$relDirPrune = './';
+    	$retPrune = DirUtilities::pruneFiles($relDirPrune);
     	$contentsAfter = DirUtilities::contentsGenerated();
-    	$sizeContentsAfter = count($contentsBefore);
-    	$this->assertEquals(11, $sizeContentsAfter);
+    	$sizeContentsAfter = count($contentsAfter);
+    	$this->assertEquals(5, $sizeContentsAfter);
     }
 }
 ?>

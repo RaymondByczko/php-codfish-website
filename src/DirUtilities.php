@@ -379,7 +379,8 @@ static public function pruneFiles($relDirPrune = NULL)
 	{
 
 		$ft = filetype($relDir.$lg.'/'.$entry);
-    	if ($ft == 'dir')
+    	if (  ($ft == 'dir') && (($entry != '..')&&($entry != '.'))  )
+    	// if ($ft == 'dir')
     	{
     	    $statDetails = stat($relDir.$lg.'/'.$entry);	
     	    $lastModifyTime = $statDetails['mtime'];
@@ -403,7 +404,11 @@ static public function pruneFiles($relDirPrune = NULL)
 		$ct++;
 		if ($ct > DirUtilities::$max_capacity)
 		{
-			unlink($keyEntry);
+			$globKeyEntry = glob($keyEntry.'/*.*');
+			echo "\n".'... globKeyEntry='.var_export($globKeyEntry, TRUE)."\n";
+			array_map("unlink", $globKeyEntry);
+			rmdir($keyEntry);
+			// unlink($keyEntry);
 		}
 	}
 /**
